@@ -1,0 +1,857 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Rekam Medis - Admin Dashboard</title>
+
+    <!-- Bootstrap 5.3 CSS -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
+
+    <!-- Bootstrap Icons -->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.1/font/bootstrap-icons.css">
+
+    <!-- Google Fonts - Inter -->
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+
+    <style>
+        :root {
+            --primary-color: #0d6efd;
+            --secondary-color: #10b981;
+            --sidebar-width: 260px;
+            --sidebar-collapsed-width: 70px;
+            --transition-speed: 0.3s;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: #f8f9fa;
+            overflow-x: hidden;
+        }
+
+        /* Sidebar Styles */
+        #sidebar {
+            min-height: 100vh;
+            width: var(--sidebar-width);
+            background: linear-gradient(180deg, #1e40af 0%, #1e3a8a 100%);
+            transition: all var(--transition-speed) ease;
+            position: fixed;
+            left: 0;
+            top: 0;
+            z-index: 1000;
+            box-shadow: 4px 0 15px rgba(0,0,0,0.1);
+        }
+
+        #sidebar.collapsed {
+            width: var(--sidebar-collapsed-width);
+        }
+
+        #sidebar .sidebar-header {
+            padding: 20px;
+            border-bottom: 1px solid rgba(255,255,255,0.1);
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+        }
+
+        #sidebar .logo {
+            color: white;
+            font-size: 1.5rem;
+            font-weight: 700;
+            text-decoration: none;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        #sidebar .logo i {
+            font-size: 2rem;
+            color: #60a5fa;
+        }
+
+        #sidebar .toggle-btn {
+            background: none;
+            border: none;
+            color: white;
+            font-size: 1.5rem;
+            cursor: pointer;
+            transition: transform var(--transition-speed);
+        }
+
+        #sidebar .toggle-btn:hover {
+            transform: scale(1.1);
+        }
+
+        #sidebar.collapsed .logo-text,
+        #sidebar.collapsed .menu-text {
+            opacity: 0;
+            width: 0;
+            overflow: hidden;
+        }
+
+        #sidebar .sidebar-menu {
+            padding: 20px 0;
+            list-style: none;
+        }
+
+        #sidebar .sidebar-menu li {
+            margin: 5px 0;
+        }
+
+        #sidebar .sidebar-menu a {
+            display: flex;
+            align-items: center;
+            padding: 12px 20px;
+            color: rgba(255,255,255,0.8);
+            text-decoration: none;
+            transition: all 0.2s ease;
+            border-left: 3px solid transparent;
+            gap: 15px;
+        }
+
+        #sidebar .sidebar-menu a:hover,
+        #sidebar .sidebar-menu a.active {
+            background: rgba(255,255,255,0.1);
+            color: white;
+            border-left-color: #60a5fa;
+        }
+
+        #sidebar .sidebar-menu i {
+            font-size: 1.25rem;
+            min-width: 24px;
+        }
+
+        /* Main Content Area */
+        #content {
+            margin-left: var(--sidebar-width);
+            min-height: 100vh;
+            transition: margin-left var(--transition-speed) ease;
+        }
+
+        #content.expanded {
+            margin-left: var(--sidebar-collapsed-width);
+        }
+
+        /* Navbar */
+        .navbar {
+            background: white;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.05);
+            padding: 15px 30px;
+        }
+
+        .navbar-brand {
+            font-weight: 700;
+            color: #1e40af !important;
+            font-size: 1.5rem;
+        }
+
+        .navbar-brand i {
+            color: #10b981;
+            margin-right: 8px;
+        }
+
+        .user-profile {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+        }
+
+        .notification-bell {
+            position: relative;
+            cursor: pointer;
+            font-size: 1.25rem;
+            color: #6b7280;
+        }
+
+        .notification-badge {
+            position: absolute;
+            top: -5px;
+            right: -5px;
+            background: #ef4444;
+            color: white;
+            font-size: 0.625rem;
+            padding: 2px 5px;
+            border-radius: 10px;
+        }
+
+        .user-avatar {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-weight: 600;
+        }
+
+        /* Dashboard Cards */
+        .stat-card {
+            background: white;
+            border-radius: 12px;
+            padding: 25px;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.05);
+            transition: transform 0.2s ease, box-shadow 0.2s ease;
+            border: none;
+            height: 100%;
+        }
+
+        .stat-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 8px 25px rgba(0,0,0,0.1);
+        }
+
+        .stat-icon {
+            width: 60px;
+            height: 60px;
+            border-radius: 12px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.75rem;
+            margin-bottom: 15px;
+        }
+
+        .stat-icon.blue { background: #dbeafe; color: #2563eb; }
+        .stat-icon.green { background: #d1fae5; color: #059669; }
+        .stat-icon.yellow { background: #fef3c7; color: #d97706; }
+        .stat-icon.purple { background: #ede9fe; color: #7c3aed; }
+
+        .stat-value {
+            font-size: 2rem;
+            font-weight: 700;
+            color: #1f2937;
+            margin-bottom: 5px;
+        }
+
+        .stat-label {
+            color: #6b7280;
+            font-size: 0.875rem;
+            font-weight: 500;
+        }
+
+        .stat-change {
+            font-size: 0.75rem;
+            margin-top: 10px;
+        }
+
+        .stat-change.positive { color: #059669; }
+        .stat-change.negative { color: #dc2626; }
+
+        /* Chart Container */
+        .chart-container {
+            background: white;
+            border-radius: 12px;
+            padding: 25px;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.05);
+            margin-top: 20px;
+        }
+
+        .chart-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 20px;
+        }
+
+        .chart-title {
+            font-size: 1.125rem;
+            font-weight: 600;
+            color: #1f2937;
+        }
+
+        .chart-canvas {
+            height: 300px;
+        }
+
+        /* Table Styles */
+        .table-container {
+            background: white;
+            border-radius: 12px;
+            padding: 25px;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.05);
+            margin-top: 20px;
+        }
+
+        .table-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 20px;
+        }
+
+        .table-title {
+            font-size: 1.125rem;
+            font-weight: 600;
+            color: #1f2937;
+        }
+
+        .table thead th {
+            background: #f8fafc;
+            color: #6b7280;
+            font-weight: 600;
+            font-size: 0.875rem;
+            text-transform: uppercase;
+            border: none;
+            padding: 15px;
+        }
+
+        .table tbody td {
+            padding: 15px;
+            vertical-align: middle;
+            color: #374151;
+            border-color: #f3f4f6;
+        }
+
+        .table tbody tr:hover {
+            background: #f9fafb;
+        }
+
+        .status-badge {
+            display: inline-block;
+            padding: 4px 12px;
+            border-radius: 20px;
+            font-size: 0.75rem;
+            font-weight: 500;
+        }
+
+        .status-badge.selesai { background: #d1fae5; color: #059669; }
+        .status-badge.pending { background: #fef3c7; color: #d97706; }
+        .status-badge.proses { background: #dbeafe; color: #2563eb; }
+
+        /* Responsive */
+        @media (max-width: 768px) {
+            #sidebar {
+                margin-left: calc(-1 * var(--sidebar-width));
+            }
+
+            #sidebar.mobile-open {
+                margin-left: 0;
+            }
+
+            #content {
+                margin-left: 0;
+            }
+
+            .stat-card {
+                margin-bottom: 15px;
+            }
+        }
+
+        /* Overlay for mobile */
+        .overlay {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0,0,0,0.5);
+            z-index: 999;
+        }
+
+        .overlay.active {
+            display: block;
+        }
+
+        /* Dropdown */
+        .dropdown-menu {
+            border: none;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+            border-radius: 10px;
+            padding: 10px;
+        }
+
+        .dropdown-item {
+            border-radius: 8px;
+            padding: 10px 15px;
+        }
+
+        .dropdown-item:hover {
+            background: #f3f4f6;
+        }
+
+        .dropdown-header {
+            font-size: 0.75rem;
+            color: #6b7280;
+            text-transform: uppercase;
+            padding: 10px 15px 5px;
+        }
+    </style>
+</head>
+<body>
+    <!-- Overlay for mobile -->
+    <div class="overlay" id="overlay"></div>
+
+    <!-- Sidebar -->
+    <nav id="sidebar">
+        <div class="sidebar-header">
+            <a href="#" class="logo">
+                <i class="bi bi-heart-pulse-fill"></i>
+                <span class="logo-text">RekamMedis</span>
+            </a>
+            <button class="toggle-btn" id="sidebarToggle">
+                <i class="bi bi-list"></i>
+            </button>
+        </div>
+
+        <ul class="sidebar-menu">
+            <li>
+                <a href="#" class="active" data-page="dashboard">
+                    <i class="bi bi-grid-fill"></i>
+                    <span class="menu-text">Dashboard</span>
+                </a>
+            </li>
+            <li>
+                <a href="#" data-page="users">
+                    <i class="bi bi-people-fill"></i>
+                    <span class="menu-text">Manajemen User</span>
+                </a>
+            </li>
+            <li>
+                <a href="#" data-page="patients">
+                    <i class="bi bi-person-fill"></i>
+                    <span class="menu-text">Data Pasien</span>
+                </a>
+            </li>
+            <li>
+                <a href="#" data-page="medical">
+                    <i class="bi bi-clipboard-heart-fill"></i>
+                    <span class="menu-text">Rekam Medis</span>
+                </a>
+            </li>
+            <li>
+                <a href="#" data-page="pregnancy">
+                    <i class="bi bi-heart-fill"></i>
+                    <span class="menu-text">Data Kehamilan</span>
+                </a>
+            </li>
+            <li>
+                <a href="#" data-page="delivery">
+                    <i class="bi bi-calendar-heart-fill"></i>
+                    <span class="menu-text">Persalinan</span>
+                </a>
+            </li>
+            <li>
+                <a href="#" data-page="immunization">
+                    <i class="bi bi-shield-fill-check"></i>
+                    <span class="menu-text">Imunisasi Bayi</span>
+                </a>
+            </li>
+            <li>
+                <a href="#" data-page="medication">
+                    <i class="bi bi-pill-fill"></i>
+                    <span class="menu-text">Obat & Tindakan</span>
+                </a>
+            </li>
+            <li>
+                <a href="#" data-page="visits">
+                    <i class="bi bi-calendar-check-fill"></i>
+                    <span class="menu-text">Jadwal Kunjungan</span>
+                </a>
+            </li>
+            <li>
+                <a href="#" data-page="reports">
+                    <i class="bi bi-file-earmark-bar-graph-fill"></i>
+                    <span class="menu-text">Laporan</span>
+                </a>
+            </li>
+            <li>
+                <a href="#" data-page="resume">
+                    <i class="bi bi-file-medical-fill"></i>
+                    <span class="menu-text">Resume Medis</span>
+                </a>
+            </li>
+            <li>
+                <a href="#" data-page="settings">
+                    <i class="bi bi-gear-fill"></i>
+                    <span class="menu-text">Pengaturan</span>
+                </a>
+            </li>
+        </ul>
+    </nav>
+
+    <!-- Main Content -->
+    <div id="content">
+        <!-- Navbar -->
+        <nav class="navbar navbar-expand">
+            <div class="container-fluid">
+                <span class="navbar-brand">
+                    <i class="bi bi-heart-pulse-fill"></i>
+                    Rekam Medis Bidan
+                </span>
+
+                <div class="ms-auto d-flex align-items-center gap-3">
+                    <!-- Notifications -->
+                    <div class="notification-bell">
+                        <i class="bi bi-bell-fill"></i>
+                        <span class="notification-badge">3</span>
+                    </div>
+
+                    <!-- User Profile Dropdown -->
+                    <div class="dropdown">
+                        <div class="user-profile dropdown-toggle" data-bs-toggle="dropdown">
+                            <div class="user-avatar">AB</div>
+                            <div class="d-none d-md-block">
+                                <div style="font-weight: 600; color: #1f2937; font-size: 0.875rem;">Admin Bidan</div>
+                                <div style="color: #6b7280; font-size: 0.75rem;">admin@bidan.com</div>
+                            </div>
+                            <i class="bi bi-chevron-down" style="color: #6b7280; font-size: 0.875rem;"></i>
+                        </div>
+                        <ul class="dropdown-menu dropdown-menu-end">
+                            <div class="dropdown-header">Akun Saya</div>
+                            <li>
+                                <a class="dropdown-item" href="#">
+                                    <i class="bi bi-person me-2"></i> Profil
+                                </a>
+                            </li>
+                            <li>
+                                <a class="dropdown-item" href="#">
+                                    <i class="bi bi-shield-lock me-2"></i> Ganti Password
+                                </a>
+                            </li>
+                            <li><hr class="dropdown-divider"></li>
+                            <li>
+                                <a class="dropdown-item text-danger" href="#">
+                                    <i class="bi bi-box-arrow-right me-2"></i> Logout
+                                </a>
+                            </li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+        </nav>
+
+        <!-- Dashboard Content -->
+        <div class="container-fluid p-4">
+            <!-- Page Title -->
+            <div class="mb-4">
+                <h2 style="font-weight: 700; color: #1f2937; margin-bottom: 5px;">Dashboard</h2>
+                <p style="color: #6b7280; font-size: 0.875rem;">Selamat datang, ini adalah ringkasan data klinik Anda hari ini.</p>
+            </div>
+
+            <!-- Statistic Cards -->
+            <div class="row g-3 mb-4">
+                <div class="col-md-3 col-sm-6">
+                    <div class="stat-card">
+                        <div class="stat-icon blue">
+                            <i class="bi bi-people-fill"></i>
+                        </div>
+                        <div class="stat-value">1,254</div>
+                        <div class="stat-label">Total Pasien</div>
+                        <div class="stat-change positive">
+                            <i class="bi bi-arrow-up"></i> 12% dari bulan lalu
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-3 col-sm-6">
+                    <div class="stat-card">
+                        <div class="stat-icon green">
+                            <i class="bi bi-calendar-check-fill"></i>
+                        </div>
+                        <div class="stat-value">38</div>
+                        <div class="stat-label">Kunjungan Hari Ini</div>
+                        <div class="stat-change positive">
+                            <i class="bi bi-arrow-up"></i> 8% dari kemarin
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-3 col-sm-6">
+                    <div class="stat-card">
+                        <div class="stat-icon yellow">
+                            <i class="bi bi-heart-fill"></i>
+                        </div>
+                        <div class="stat-value">186</div>
+                        <div class="stat-label">Data Ibu Hamil</div>
+                        <div class="stat-change positive">
+                            <i class="bi bi-arrow-up"></i> 5% dari bulan lalu
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-3 col-sm-6">
+                    <div class="stat-card">
+                        <div class="stat-icon purple">
+                            <i class="bi bi-calendar-heart-fill"></i>
+                        </div>
+                        <div class="stat-value">24</div>
+                        <div class="stat-label">Persalinan Bulan Ini</div>
+                        <div class="stat-change negative">
+                            <i class="bi bi-arrow-down"></i> 3% dari bulan lalu
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Chart and Table Row -->
+            <div class="row g-3">
+                <!-- Chart -->
+                <div class="col-lg-8">
+                    <div class="chart-container">
+                        <div class="chart-header">
+                            <h5 class="chart-title">Grafik Kunjungan Pasien (7 Hari Terakhir)</h5>
+                            <button class="btn btn-sm btn-outline-primary">Lihat Semua</button>
+                        </div>
+                        <canvas id="visitChart" class="chart-canvas"></canvas>
+                    </div>
+                </div>
+
+                <!-- Recent Activity -->
+                <div class="col-lg-4">
+                    <div class="table-container">
+                        <div class="table-header">
+                            <h5 class="table-title">Kunjungan Terbaru</h5>
+                            <a href="#" class="btn btn-sm btn-link text-primary">Lihat Semua</a>
+                        </div>
+                        <div class="list-group list-group-flush">
+                            <div class="list-group-item" style="padding: 12px 0; border: none;">
+                                <div class="d-flex justify-content-between align-items-start mb-2">
+                                    <div>
+                                        <div style="font-weight: 600; color: #1f2937;">Siti Aminah</div>
+                                        <div style="font-size: 0.75rem; color: #6b7280;">Kuningan, 27 Apr 2025</div>
+                                    </div>
+                                    <span class="status-badge selesai">Selesai</span>
+                                </div>
+                                <div style="font-size: 0.875rem; color: #4b5563;">Check-up rutin kehamilan 6 bulan</div>
+                            </div>
+                            <div class="list-group-item" style="padding: 12px 0; border: none;">
+                                <div class="d-flex justify-content-between align-items-start mb-2">
+                                    <div>
+                                        <div style="font-weight: 600; color: #1f2937;">Dewi Kartika</div>
+                                        <div style="font-size: 0.75rem; color: #6b7280;">Cibiru, 27 Apr 2025</div>
+                                    </div>
+                                    <span class="status-badge proses">Proses</span>
+                                </div>
+                                <div style="font-size: 0.875rem; color: #4b5563;">Imunisasi hepatitis B</div>
+                            </div>
+                            <div class="list-group-item" style="padding: 12px 0; border: none;">
+                                <div class="d-flex justify-content-between align-items-start mb-2">
+                                    <div>
+                                        <div style="font-weight: 600; color: #1f2937;">Ratna Sari</div>
+                                        <div style="font-size: 0.75rem; color: #6b7280;">Margacinta, 26 Apr 2025</div>
+                                    </div>
+                                    <span class="status-badge selesai">Selesai</span>
+                                </div>
+                                <div style="font-size: 0.875rem; color: #4b5563;">Persalinan normal</div>
+                            </div>
+                            <div class="list-group-item" style="padding: 12px 0; border: none;">
+                                <div class="d-flex justify-content-between align-items-start mb-2">
+                                    <div>
+                                        <div style="font-weight: 600; color: #1f2937;">Ayu Lestari</div>
+                                        <div style="font-size: 0.75rem; color: #6b7280;">Bandung, 26 Apr 2025</div>
+                                    </div>
+                                    <span class="status-badge pending">Pending</span>
+                                </div>
+                                <div style="font-size: 0.875rem; color: #4b5563;">Konsultasi persiapan persalinan</div>
+                            </div>
+                            <div class="list-group-item" style="padding: 12px 0; border: none;">
+                                <div class="d-flex justify-content-between align-items-start mb-2">
+                                    <div>
+                                        <div style="font-weight: 600; color: #1f2937;">Lina Marlina</div>
+                                        <div style="font-size: 0.75rem; color: #6b7280;">Cimahi, 25 Apr 2025</div>
+                                    </div>
+                                    <span class="status-badge selesai">Selesai</span>
+                                </div>
+                                <div style="font-size: 0.875rem; color: #4b5563;">USG kehamilan</div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Table Row -->
+            <div class="row g-3 mt-1">
+                <div class="col-12">
+                    <div class="table-container">
+                        <div class="table-header">
+                            <h5 class="table-title">Data Kunjungan Terbaru</h5>
+                            <button class="btn btn-sm btn-primary">
+                                <i class="bi bi-download me-1"></i> Export
+                            </button>
+                        </div>
+                        <div class="table-responsive">
+                            <table class="table table-hover">
+                                <thead>
+                                    <tr>
+                                        <th>No</th>
+                                        <th>Nama Pasien</th>
+                                        <th>Tanggal Kunjungan</th>
+                                        <th>Keluhan</th>
+                                        <th>Layanan</th>
+                                        <th>Status</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <tr>
+                                        <td>1</td>
+                                        <td>Siti Aminah</td>
+                                        <td>27 Apr 2025</td>
+                                        <td>Check-up rutin kehamilan</td>
+                                        <td><span class="badge bg-primary bg-opacity-10 text-primary">Konsultasi</span></td>
+                                        <td><span class="status-badge selesai">Selesai</span></td>
+                                    </tr>
+                                    <tr>
+                                        <td>2</td>
+                                        <td>Dewi Kartika</td>
+                                        <td>27 Apr 2025</td>
+                                        <td>Imunisasi anak</td>
+                                        <td><span class="badge bg-success bg-opacity-10 text-success">Imunisasi</span></td>
+                                        <td><span class="status-badge proses">Proses</span></td>
+                                    </tr>
+                                    <tr>
+                                        <td>3</td>
+                                        <td>Ratna Sari</td>
+                                        <td>26 Apr 2025</td>
+                                        <td>Persalinan</td>
+                                        <td><span class="badge bg-danger bg-opacity-10 text-danger">Persalinan</span></td>
+                                        <td><span class="status-badge selesai">Selesai</span></td>
+                                    </tr>
+                                    <tr>
+                                        <td>4</td>
+                                        <td>Ayu Lestari</td>
+                                        <td>26 Apr 2025</td>
+                                        <td>Konsultasi persiapan</td>
+                                        <td><span class="badge bg-warning bg-opacity-10 text-warning">Persiapan</span></td>
+                                        <td><span class="status-badge pending">Pending</span></td>
+                                    </tr>
+                                    <tr>
+                                        <td>5</td>
+                                        <td>Lina Marlina</td>
+                                        <td>25 Apr 2025</td>
+                                        <td>USG kehamilan</td>
+                                        <td><span class="badge bg-info bg-opacity-10 text-info">USG</span></td>
+                                        <td><span class="status-badge selesai">Selesai</span></td>
+                                    </tr>
+                                    <tr>
+                                        <td>6</td>
+                                        <td>Nur Asiah</td>
+                                        <td>25 Apr 2025</td>
+                                        <td>Pemeriksaan laboratory</td>
+                                        <td><span class="badge bg-secondary bg-opacity-10 text-secondary">Lab</span></td>
+                                        <td><span class="status-badge selesai">Selesai</span></td>
+                                    </tr>
+                                    <tr>
+                                        <td>7</td>
+                                        <td>Maya Sinta</td>
+                                        <td>24 Apr 2025</td>
+                                        <td>Konsultasi kontrasepsi</td>
+                                        <td><span class="badge bg-dark bg-opacity-10 text-dark">Konsultasi</span></td>
+                                        <td><span class="status-badge selesai">Selesai</span></td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Bootstrap 5.3 Bundle JS -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
+
+    <!-- Chart.js -->
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+
+    <script>
+        // Sidebar Toggle
+        const sidebar = document.getElementById('sidebar');
+        const content = document.getElementById('content');
+        const sidebarToggle = document.getElementById('sidebarToggle');
+        const overlay = document.getElementById('overlay');
+
+        function toggleSidebar() {
+            sidebar.classList.toggle('collapsed');
+            content.classList.toggle('expanded');
+
+            // For mobile, use overlay
+            if (window.innerWidth <= 768) {
+                sidebar.classList.toggle('mobile-open');
+                overlay.classList.toggle('active');
+            }
+        }
+
+        sidebarToggle.addEventListener('click', toggleSidebar);
+        overlay.addEventListener('click', toggleSidebar);
+
+        // Responsive handling - reset classes on resize
+        window.addEventListener('resize', () => {
+            if (window.innerWidth > 768) {
+                overlay.classList.remove('active');
+                sidebar.classList.remove('mobile-open');
+            }
+        });
+
+        // Active menu highlighting
+        const menuItems = document.querySelectorAll('.sidebar-menu a');
+        menuItems.forEach(item => {
+            item.addEventListener('click', function(e) {
+                e.preventDefault();
+                menuItems.forEach(i => i.classList.remove('active'));
+                this.classList.add('active');
+            });
+        });
+
+        // Initialize Chart.js - Patient Visits
+        const ctx = document.getElementById('visitChart').getContext('2d');
+
+        const gradient = ctx.createLinearGradient(0, 0, 0, 300);
+        gradient.addColorStop(0, 'rgba(16, 185, 129, 0.2)');
+        gradient.addColorStop(1, 'rgba(16, 185, 129, 0.02)');
+
+        new Chart(ctx, {
+            type: 'line',
+            data: {
+                labels: ['Senin', 'Selasa', 'Rabu', 'Kamis', 'Jumat', 'Sabtu', 'Minggu'],
+                datasets: [{
+                    label: 'Jumlah Kunjungan',
+                    data: [32, 45, 38, 52, 41, 36, 38],
+                    borderColor: '#10b981',
+                    backgroundColor: gradient,
+                    fill: true,
+                    tension: 0.4,
+                    pointRadius: 4,
+                    pointBackgroundColor: '#10b981',
+                    pointBorderColor: '#fff',
+                    pointBorderWidth: 2,
+                    pointHoverRadius: 6
+                }]
+            },
+            options: {
+                responsive: true,
+                maintainAspectRatio: false,
+                plugins: {
+                    legend: {
+                        display: false
+                    }
+                },
+                scales: {
+                    y: {
+                        beginAtZero: true,
+                        grid: {
+                            color: 'rgba(0, 0, 0, 0.05)'
+                        },
+                        ticks: {
+                            font: { size: 12 }
+                        }
+                    },
+                    x: {
+                        grid: {
+                            display: false
+                        },
+                        ticks: {
+                            font: { size: 12 }
+                        }
+                    }
+                }
+            }
+        });
+    </script>
+</body>
+</html>

@@ -1,0 +1,143 @@
+@import "tailwindcss";
+
+/* Tailwind v4 Theme Customization */
+@theme {
+   --color-yale-blue-50: #e5f4ff;
+--color-yale-blue-100: #cceaff;
+--color-yale-blue-200: #99d5ff;
+--color-yale-blue-300: #66bfff;
+--color-yale-blue-400: #33aaff;
+--color-yale-blue-500: #0095ff;
+--color-yale-blue-600: #0077cc;
+--color-yale-blue-700: #005999;
+--color-yale-blue-800: #003c66;
+--color-yale-blue-900: #001e33;
+--color-yale-blue-950: #001524;
+
+--color-cool-sky-50: #e6f4ff;
+--color-cool-sky-100: #cdeafe;
+--color-cool-sky-200: #9ad4fe;
+--color-cool-sky-300: #68bffd;
+--color-cool-sky-400: #35aafd;
+--color-cool-sky-500: #0394fc;
+--color-cool-sky-600: #0277ca;
+--color-cool-sky-700: #025997;
+--color-cool-sky-800: #013b65;
+--color-cool-sky-900: #011e32;
+--color-cool-sky-950: #001523;
+
+--color-blue-slate-50: #eef3f7;
+--color-blue-slate-100: #dde7ee;
+--color-blue-slate-200: #bad0de;
+--color-blue-slate-300: #98b8cd;
+--color-blue-slate-400: #75a0bd;
+--color-blue-slate-500: #5388ac;
+--color-blue-slate-600: #426d8a;
+--color-blue-slate-700: #325267;
+--color-blue-slate-800: #213745;
+--color-blue-slate-900: #111b22;
+--color-blue-slate-950: #0c1318;
+
+--color-dodger-blue-50: #e5f4ff;
+--color-dodger-blue-100: #cceaff;
+--color-dodger-blue-200: #99d5ff;
+--color-dodger-blue-300: #66bfff;
+--color-dodger-blue-400: #33aaff;
+--color-dodger-blue-500: #0095ff;
+--color-dodger-blue-600: #0077cc;
+--color-dodger-blue-700: #005999;
+--color-dodger-blue-800: #003c66;
+--color-dodger-blue-900: #001e33;
+--color-dodger-blue-950: #001524;
+
+--color-bright-teal-blue-50: #e6f5ff;
+--color-bright-teal-blue-100: #cdeafe;
+--color-bright-teal-blue-200: #9ad6fe;
+--color-bright-teal-blue-300: #68c1fd;
+--color-bright-teal-blue-400: #35adfd;
+--color-bright-teal-blue-500: #0398fc;
+--color-bright-teal-blue-600: #027aca;
+--color-bright-teal-blue-700: #025b97;
+--color-bright-teal-blue-800: #013d65;
+--color-bright-teal-blue-900: #011e32;
+--color-bright-teal-blue-950: #001523;
+
+
+
+    /* Typography */
+    --font-family-sans: 'Inter', ui-sans-serif, system-ui, sans-serif, 'Apple Color Emoji', 'Segoe UI Emoji', 'Segoe UI Symbol', 'Noto Color Emoji';
+
+    /* Custom Shadows */
+    --shadow-elevation-sm: 0 1px 2px 0 rgba(0, 0, 0, 0.05);
+    --shadow-elevation-md: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
+    --shadow-elevation-lg: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05);
+    --shadow-elevation-xl: 0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04);
+}
+
+/* Base Styles */
+* {
+    box-sizing: border-box;
+}
+
+body {
+    font-family: var(--font-family-sans);
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+}
+
+/* Sidebar Transition Classes */
+#sidebar {
+    transition: transform 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+#overlay {
+    transition: opacity 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+/* Smooth transitions for cards and interactive elements */
+.stat-card,
+.table-row-hover,
+.dropdown-item,
+.sidebar-link {
+    transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+/* Custom scrollbar for webkit browsers */
+::-webkit-scrollbar {
+    width: 6px;
+    height: 6px;
+}
+
+::-webkit-scrollbar-track {
+    background: #f1f5f9;
+    border-radius: 4px;
+}
+
+::-webkit-scrollbar-thumb {
+    background: #cbd5e1;
+    border-radius: 4px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+    background: #94a3b8;
+}
+
+/* Focus styles for accessibility */
+button:focus-visible,
+a:focus-visible,
+input:focus-visible,
+select:focus-visible,
+textarea:focus-visible {
+    outline: 2px solid var(--color-blue-500);
+    outline-offset: 2px;
+}
+
+/* Remove default button outline */
+button:focus {
+    outline: none;
+}
+
+/* Prevent body scroll when mobile sidebar is open */
+body.sidebar-open {
+    overflow: hidden;
+}

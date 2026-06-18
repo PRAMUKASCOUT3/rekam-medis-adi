@@ -1,0 +1,70 @@
+/* Custom styles for sidebar toggle and mobile behavior */
+
+/* Desktop sidebar is always visible */
+@media (min-width: 768px) {
+    #sidebar {
+        transform: translateX(0);
+    }
+    
+    #content {
+        margin-left: 16rem; /* w-64 */
+    }
+    
+    #sidebar.collapsed {
+        width: 4rem; /* w-16 */
+    }
+    
+    #sidebar.collapsed + #content,
+    #content.expanded {
+        margin-left: 4rem; /* w-16 */
+    }
+    
+    #sidebar.collapsed .logo-text,
+    #sidebar.collapsed .menu-text {
+        opacity: 0;
+        width: 0;
+        overflow: hidden;
+        display: none;
+    }
+    
+    #overlay {
+        display: none !important;
+    }
+}
+
+/* Mobile sidebar behavior */
+@media (max-width: 767px) {
+    #sidebar {
+        transform: translateX(-100%);
+        width: 16rem;
+    }
+    
+    #sidebar.mobile-open {
+        transform: translateX(0);
+    }
+    
+    #content {
+        margin-left: 0;
+    }
+    
+    #overlay.active {
+        display: block;
+        opacity: 1;
+    }
+}
+
+/* Smooth transitions */
+#sidebar,
+#content,
+#overlay {
+    transition: all 0.3s ease;
+}
+
+/* Animation for overlay */
+#overlay {
+    opacity: 0;
+}
+
+#overlay.active {
+    opacity: 1;
+}
